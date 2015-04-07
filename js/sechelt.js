@@ -43,6 +43,7 @@ function init() {
 	controls = new THREE.VRControls(camera);
 
 	orbitControls = new THREE.OrbitControls(camera);
+	orbitControls.noZoom = true;
 
 	onWindowResize();
 
