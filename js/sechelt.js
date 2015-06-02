@@ -43,11 +43,14 @@ function init() {
 	controls = new THREE.VRControls(camera);
 
 	orbitControls = new THREE.OrbitControls(camera);
+	orbitControls.noZoom = true;
 
 	onWindowResize();
 
 	// Initialize the WebVR manager.
-	manager = new WebVRManager(renderer, effect);
+	manager = new WebVRManager(renderer, effect, {
+		hideButton: true
+	});
 
 	// skybox
 	var geometry = new THREE.SphereGeometry(10000, 64, 32);
@@ -294,7 +297,19 @@ function init() {
 
 
 	window.addEventListener('resize', onWindowResize, false);
-	//document.body.addEventListener('click', togglePlay);
+	
+	function handlePostmessage(e) {
+    if (e.data.mode == 'vr') {
+      manager.enterVR();
+    }
+
+    if (e.data.mode == 'mono') {
+    	manager.exitVR();
+    }
+  }
+
+	window.addEventListener('message', handlePostmessage);
+
 }
 
 var playing = true;
@@ -367,6 +382,7 @@ function animate(time) {
 		renderer.render(scene, camera);
 		orbitControls.update();
 	}
+	onWindowResize();
 
 }
 
